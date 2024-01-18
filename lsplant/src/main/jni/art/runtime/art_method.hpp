@@ -151,21 +151,21 @@ public:
             executable = JNI_FindClass(env, "java/lang/reflect/ArtMethod");
         }
         if (!executable) {
-            LOGE("Failed to found Executable/AbstractMethod/ArtMethod");
+            //LOGE("Failed to found Executable/AbstractMethod/ArtMethod");
             return false;
         }
 
         if (sdk_int >= __ANDROID_API_M__) [[likely]] {
             if (art_method_field = JNI_GetFieldID(env, executable, "artMethod", "J");
                 !art_method_field) {
-                LOGE("Failed to find artMethod field");
+                //LOGE("Failed to find artMethod field");
                 return false;
             }
         }
 
         auto throwable = JNI_FindClass(env, "java/lang/Throwable");
         if (!throwable) {
-            LOGE("Failed to found Executable");
+            //LOGE("Failed to found Executable");
             return false;
         }
         auto clazz = JNI_FindClass(env, "java/lang/Class");
@@ -175,7 +175,7 @@ public:
         const auto constructors =
             JNI_Cast<jobjectArray>(JNI_CallObjectMethod(env, throwable, get_declared_constructors));
         if (constructors.size() < 2) {
-            LOGE("Throwable has less than 2 constructors");
+            //LOGE("Throwable has less than 2 constructors");
             return false;
         }
         auto first_ctor = constructors[0];
@@ -183,11 +183,11 @@ public:
         auto *first = FromReflectedMethod(env, first_ctor.get());
         auto *second = FromReflectedMethod(env, second_ctor.get());
         art_method_size = reinterpret_cast<uintptr_t>(second) - reinterpret_cast<uintptr_t>(first);
-        LOGD("ArtMethod size: %zu", art_method_size);
+        //LOGD("ArtMethod size: %zu", art_method_size);
 
         if (RoundUpTo(4 * 9, kPointerSize) + kPointerSize * 3 < art_method_size) [[unlikely]] {
             if (sdk_int >= __ANDROID_API_M__) {
-                LOGW("ArtMethod size exceeds maximum assume. There may be something wrong.");
+                //LOGW("ArtMethod size exceeds maximum assume. There may be something wrong.");
             }
         }
 
@@ -207,7 +207,7 @@ public:
                 }
             }
             if (access_flags_offset == 0) {
-                LOGW("Failed to find accessFlags field. Fallback to 4.");
+                //LOGW("Failed to find accessFlags field. Fallback to 4.");
                 access_flags_offset = 4U;
             }
         } else {
@@ -237,10 +237,10 @@ public:
                 data_offset = get_offset_from_art_method("entryPointFromJni", "J");
             }
         }
-        LOGD("ArtMethod::declaring_class offset: %zu", declaring_class_offset);
-        LOGD("ArtMethod::entrypoint offset: %zu", entry_point_offset);
-        LOGD("ArtMethod::data offset: %zu", data_offset);
-        LOGD("ArtMethod::access_flags offset: %zu", access_flags_offset);
+        //LOGD("ArtMethod::declaring_class offset: %zu", declaring_class_offset);
+        //LOGD("ArtMethod::entrypoint offset: %zu", entry_point_offset);
+        //LOGD("ArtMethod::data offset: %zu", data_offset);
+        //LOGD("ArtMethod::access_flags offset: %zu", access_flags_offset);
 
         if (sdk_int < __ANDROID_API_R__) {
             kAccPreCompiled = 0;
@@ -253,7 +253,7 @@ public:
                                   "_ZN3artL15GetMethodShortyEP7_JNIEnvP10_jmethodID", true) &&
             !RETRIEVE_FUNC_SYMBOL(GetMethodShorty,
                                   "_ZN3art15GetMethodShortyEP7_JNIEnvP10_jmethodID")) {
-            LOGE("Failed to find GetMethodShorty");
+            //LOGE("Failed to find GetMethodShorty");
             return false;
         }
 
@@ -264,14 +264,14 @@ public:
         if (sdk_int <= __ANDROID_API_O__) [[unlikely]] {
             auto abstract_method_error = JNI_FindClass(env, "java/lang/AbstractMethodError");
             if (!abstract_method_error) {
-                LOGE("Failed to find AbstractMethodError");
+                //LOGE("Failed to find AbstractMethodError");
                 return false;
             }
             if (sdk_int == __ANDROID_API_O__) [[unlikely]] {
                 auto executable_get_name =
                     JNI_GetMethodID(env, executable, "getName", "()Ljava/lang/String;");
                 if (!executable_get_name) {
-                    LOGE("Failed to find Executable.getName");
+                    //LOGE("Failed to find Executable.getName");
                     return false;
                 }
                 RETRIEVE_MEM_FUNC_SYMBOL(ThrowInvocationTimeError, "_ZN3art9ArtMethod24ThrowInvocationTimeErrorEv");

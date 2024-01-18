@@ -32,7 +32,7 @@ private:
     inline static art::ArtMethod *MayGetBackup(art::ArtMethod *method) {
         if (auto backup = IsHooked(method); backup) [[unlikely]] {
             method = backup;
-            LOGV("propagate native method: %s", method->PrettyMethod(true).data());
+            //LOGV("propagate native method: %s", method->PrettyMethod(true).data());
         }
         return method;
     }
@@ -82,14 +82,14 @@ private:
             if (IsDeoptimized(art_method)) {
                 if (new_trampoline != art_quick_to_interpreter_bridge &&
                     new_trampoline != art_quick_generic_jni_trampoline) {
-                    LOGV("re-deoptimize for %p", art_method);
+                    //LOGV("re-deoptimize for %p", art_method);
                     SetEntryPointsToInterpreter(art_method);
                 }
                 continue;
             }
             if (auto backup_method = IsHooked(art_method); backup_method) [[likely]] {
                 if (new_trampoline != old_trampoline) [[unlikely]] {
-                    LOGV("propagate entrypoint for %p", backup_method);
+                    //LOGV("propagate entrypoint for %p", backup_method);
                     backup_method->SetEntryPoint(new_trampoline);
                 }
             }
@@ -172,8 +172,8 @@ public:
                                       "art_quick_generic_jni_trampoline")) [[unlikely]] {
                 return false;
             }
-            LOGD("art_quick_to_interpreter_bridge = %p", art_quick_to_interpreter_bridgeSym);
-            LOGD("art_quick_generic_jni_trampoline = %p", art_quick_generic_jni_trampolineSym);
+            //LOGD("art_quick_to_interpreter_bridge = %p", art_quick_to_interpreter_bridgeSym);
+            //LOGD("art_quick_generic_jni_trampoline = %p", art_quick_generic_jni_trampolineSym);
         }
         return true;
     }
@@ -186,14 +186,14 @@ public:
         // Android 13
         if (art_quick_to_interpreter_bridgeSym && art_quick_generic_jni_trampolineSym) [[likely]] {
             if (art_method->GetAccessFlags() & ArtMethod::kAccNative) [[unlikely]] {
-                LOGV("deoptimize native method %s from %p to %p",
-                     art_method->PrettyMethod(true).data(), art_method->GetEntryPoint(),
-                     art_quick_generic_jni_trampolineSym);
+                //LOGV("deoptimize native method %s from %p to %p",
+                     //art_method->PrettyMethod(true).data(), art_method->GetEntryPoint(),
+                     //art_quick_generic_jni_trampolineSym);
                 art_method->SetEntryPoint(
                     reinterpret_cast<void *>(art_quick_generic_jni_trampolineSym));
             } else {
-                LOGV("deoptimize method %s from %p to %p", art_method->PrettyMethod(true).data(),
-                     art_method->GetEntryPoint(), art_quick_to_interpreter_bridgeSym);
+                //LOGV("deoptimize method %s from %p to %p", art_method->PrettyMethod(true).data(),
+                     //art_method->GetEntryPoint(), art_quick_to_interpreter_bridgeSym);
                 art_method->SetEntryPoint(
                     reinterpret_cast<void *>(art_quick_to_interpreter_bridgeSym));
             }

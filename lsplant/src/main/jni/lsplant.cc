@@ -109,17 +109,17 @@ std::string generated_method_name;
 
 bool InitConfig(const InitInfo &info) {
     if (info.generated_class_name.empty()) {
-        LOGE("generated class name cannot be empty");
+        //LOGE("generated class name cannot be empty");
         return false;
     }
     generated_class_name = info.generated_class_name;
     if (info.generated_field_name.empty()) {
-        LOGE("generated field name cannot be empty");
+        //LOGE("generated field name cannot be empty");
         return false;
     }
     generated_field_name = info.generated_field_name;
     if (info.generated_method_name.empty()) {
-        LOGE("generated method name cannot be empty");
+        //LOGE("generated method name cannot be empty");
         return false;
     }
     generated_method_name = info.generated_method_name;
@@ -135,78 +135,78 @@ bool InitJNI(JNIEnv *env) {
         executable = JNI_NewGlobalRef(env, JNI_FindClass(env, "java/lang/reflect/AbstractMethod"));
     }
     if (!executable) {
-        LOGE("Failed to found Executable/AbstractMethod");
+        //LOGE("Failed to found Executable/AbstractMethod");
         return false;
     }
 
     if (method_get_name = JNI_GetMethodID(env, executable, "getName", "()Ljava/lang/String;");
         !method_get_name) {
-        LOGE("Failed to find getName method");
+        //LOGE("Failed to find getName method");
         return false;
     }
     if (method_get_declaring_class =
             JNI_GetMethodID(env, executable, "getDeclaringClass", "()Ljava/lang/Class;");
         !method_get_declaring_class) {
-        LOGE("Failed to find getDeclaringClass method");
+        //LOGE("Failed to find getDeclaringClass method");
         return false;
     }
     if (method_get_parameter_types =
             JNI_GetMethodID(env, executable, "getParameterTypes", "()[Ljava/lang/Class;");
         !method_get_parameter_types) {
-        LOGE("Failed to find getParameterTypes method");
+        //LOGE("Failed to find getParameterTypes method");
         return false;
     }
     if (method_get_return_type =
             JNI_GetMethodID(env, JNI_FindClass(env, "java/lang/reflect/Method"), "getReturnType",
                             "()Ljava/lang/Class;");
         !method_get_return_type) {
-        LOGE("Failed to find getReturnType method");
+        //LOGE("Failed to find getReturnType method");
         return false;
     }
     auto clazz = JNI_FindClass(env, "java/lang/Class");
     if (!clazz) {
-        LOGE("Failed to find Class");
+        //LOGE("Failed to find Class");
         return false;
     }
 
     if (class_get_class_loader =
             JNI_GetMethodID(env, clazz, "getClassLoader", "()Ljava/lang/ClassLoader;");
         !class_get_class_loader) {
-        LOGE("Failed to find getClassLoader");
+        //LOGE("Failed to find getClassLoader");
         return false;
     }
 
     if (class_get_declared_constructors = JNI_GetMethodID(env, clazz, "getDeclaredConstructors",
                                                           "()[Ljava/lang/reflect/Constructor;");
         !class_get_declared_constructors) {
-        LOGE("Failed to find getDeclaredConstructors");
+        //LOGE("Failed to find getDeclaredConstructors");
         return false;
     }
 
     if (class_get_name = JNI_GetMethodID(env, clazz, "getName", "()Ljava/lang/String;");
         !class_get_name) {
-        LOGE("Failed to find getName");
+        //LOGE("Failed to find getName");
         return false;
     }
 
     if (class_access_flags = JNI_GetFieldID(env, clazz, "accessFlags", "I"); !class_access_flags) {
-        LOGE("Failed to find Class.accessFlags");
+        //LOGE("Failed to find Class.accessFlags");
         return false;
     }
     auto path_class_loader = JNI_FindClass(env, "dalvik/system/PathClassLoader");
     if (!path_class_loader) {
-        LOGE("Failed to find PathClassLoader");
+        //LOGE("Failed to find PathClassLoader");
         return false;
     }
     if (path_class_loader_init = JNI_GetMethodID(env, path_class_loader, "<init>",
                                                  "(Ljava/lang/String;Ljava/lang/ClassLoader;)V");
         !path_class_loader_init) {
-        LOGE("Failed to find PathClassLoader.<init>");
+        //LOGE("Failed to find PathClassLoader.<init>");
         return false;
     }
     auto dex_file_class = JNI_FindClass(env, "dalvik/system/DexFile");
     if (!dex_file_class) {
-        LOGE("Failed to find DexFile");
+        //LOGE("Failed to find DexFile");
         return false;
     }
     if (sdk_int >= __ANDROID_API_Q__) {
@@ -217,24 +217,24 @@ bool InitJNI(JNIEnv *env) {
         dex_file_init = JNI_GetMethodID(env, dex_file_class, "<init>", "(Ljava/nio/ByteBuffer;)V");
     }
     if (sdk_int >= __ANDROID_API_O__ && !dex_file_init_with_cl && !dex_file_init) {
-        LOGE("Failed to find DexFile.<init>");
+        //LOGE("Failed to find DexFile.<init>");
         return false;
     }
     if (load_class =
             JNI_GetMethodID(env, dex_file_class, "loadClass",
                             "(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;");
         !load_class) {
-        LOGE("Failed to find a suitable way to load class");
+        //LOGE("Failed to find a suitable way to load class");
         return false;
     }
     auto accessible_object = JNI_FindClass(env, "java/lang/reflect/AccessibleObject");
     if (!accessible_object) {
-        LOGE("Failed to find AccessibleObject");
+        //LOGE("Failed to find AccessibleObject");
         return false;
     }
     if (set_accessible = JNI_GetMethodID(env, accessible_object, "setAccessible", "(Z)V");
         !set_accessible) {
-        LOGE("Failed to find AccessibleObject.setAccessible");
+        //LOGE("Failed to find AccessibleObject.setAccessible");
         return false;
     }
     return true;
@@ -251,48 +251,48 @@ bool InitNative(JNIEnv *env, const HookHandler &handler) {
         return false;
     }
     if (!ArtMethod::Init(env, handler)) {
-        LOGE("Failed to init art method");
+        //LOGE("Failed to init art method");
         return false;
     }
     UpdateTrampoline(ArtMethod::GetEntryPointOffset());
     if (!Thread::Init(handler)) {
-        LOGE("Failed to init thread");
+        //LOGE("Failed to init thread");
         return false;
     }
     if (!ClassLinker::Init(handler)) {
-        LOGE("Failed to init class linker");
+        //LOGE("Failed to init class linker");
         return false;
     }
     if (!Class::Init(handler)) {
-        LOGE("Failed to init mirror class");
+        //LOGE("Failed to init mirror class");
         return false;
     }
     if (!ScopedSuspendAll::Init(handler)) {
-        LOGE("Failed to init scoped suspend all");
+        //LOGE("Failed to init scoped suspend all");
         return false;
     }
     if (!ScopedGCCriticalSection::Init(handler)) {
-        LOGE("Failed to init scoped gc critical section");
+        //LOGE("Failed to init scoped gc critical section");
         return false;
     }
     if (!JitCodeCache::Init(handler)) {
-        LOGE("Failed to init jit code cache");
+        //LOGE("Failed to init jit code cache");
         return false;
     }
     if (!DexFile::Init(env, handler)) {
-        LOGE("Failed to init dex file");
+        //LOGE("Failed to init dex file");
         return false;
     }
     if (!Instrumentation::Init(env, handler)) {
-        LOGE("Failed to init instrumentation");
+        //LOGE("Failed to init instrumentation");
         return false;
     }
     if (!JniIdManager::Init(env, handler)) {
-        LOGE("Failed to init jni id manager");
+        //LOGE("Failed to init jni id manager");
         return false;
     }
     if (!Runtime::Init(handler)) {
-        LOGE("Failed to init runtime");
+        //LOGE("Failed to init runtime");
         return false;
     }
 
@@ -366,7 +366,7 @@ std::tuple<jclass, jfieldID, jmethodID, jmethodID> BuildDex(JNIEnv *env, jobject
     using namespace startop::dex;
 
     if (shorty.empty()) {
-        LOGE("Invalid shorty");
+        //LOGE("Invalid shorty");
         return {nullptr, nullptr, nullptr, nullptr};
     }
 
@@ -473,7 +473,7 @@ std::tuple<jclass, jfieldID, jmethodID, jmethodID> BuildDex(JNIEnv *env, jobject
             target, image.size(), generated_source_name.empty() ? "lsplant" : generated_source_name,
             &err_msg);
         if (!dex) {
-            LOGE("Failed to open memory dex: %s", err_msg.data());
+            //LOGE("Failed to open memory dex: %s", err_msg.data());
         } else {
             java_dex_file = WrapScope(env, dex ? dex->ToJavaDexFile(env) : jobject{nullptr});
         }
@@ -550,8 +550,8 @@ void *GenerateTrampolineFor(art::ArtMethod *hook) {
             trampoline_lock.clear(std::memory_order_release);
             trampoline_lock.notify_all();
         }
-        LOGV("trampoline: count = %u, address = %zx, target = %zx", count, address,
-             address + count * kTrampolineSize);
+        //LOGV("trampoline: count = %u, address = %zx, target = %zx", count, address,
+             //address + count * kTrampolineSize);
         address = address + count * kTrampolineSize;
         break;
     }
@@ -569,15 +569,15 @@ bool DoHook(ArtMethod *target, ArtMethod *hook, ArtMethod *backup) {
     ScopedGCCriticalSection section(art::Thread::Current(), art::gc::kGcCauseDebugger,
                                     art::gc::kCollectorTypeDebugger);
     ScopedSuspendAll suspend("LSPlant Hook", false);
-    LOGV("Hooking: target = %s(%p), hook = %s(%p), backup = %s(%p)", target->PrettyMethod().c_str(),
-         target, hook->PrettyMethod().c_str(), hook, backup->PrettyMethod().c_str(), backup);
+    //LOGV("Hooking: target = %s(%p), hook = %s(%p), backup = %s(%p)", target->PrettyMethod().c_str(),
+         //target, hook->PrettyMethod().c_str(), hook, backup->PrettyMethod().c_str(), backup);
 
     if (auto *entrypoint = GenerateTrampolineFor(hook); !entrypoint) {
-        LOGE("Failed to generate trampoline");
+        //LOGE("Failed to generate trampoline");
         return false;
         // NOLINTNEXTLINE
     } else {
-        LOGV("Generated trampoline %p", entrypoint);
+        //LOGV("Generated trampoline %p", entrypoint);
 
         target->SetNonCompilable();
         hook->SetNonCompilable();
@@ -591,9 +591,9 @@ bool DoHook(ArtMethod *target, ArtMethod *hook, ArtMethod *backup) {
 
         if (!backup->IsStatic()) backup->SetPrivate();
 
-        LOGV("Done hook: target(%p:0x%x) -> %p; backup(%p:0x%x) -> %p; hook(%p:0x%x) -> %p", target,
-             target->GetAccessFlags(), target->GetEntryPoint(), backup, backup->GetAccessFlags(),
-             backup->GetEntryPoint(), hook, hook->GetAccessFlags(), hook->GetEntryPoint());
+        //LOGV("Done hook: target(%p:0x%x) -> %p; backup(%p:0x%x) -> %p; hook(%p:0x%x) -> %p", target,
+             //target->GetAccessFlags(), target->GetEntryPoint(), backup, backup->GetAccessFlags(),
+             //backup->GetEntryPoint(), hook, hook->GetAccessFlags(), hook->GetEntryPoint());
 
         return true;
     }
@@ -603,13 +603,13 @@ bool DoUnHook(ArtMethod *target, ArtMethod *backup) {
     ScopedGCCriticalSection section(art::Thread::Current(), art::gc::kGcCauseDebugger,
                                     art::gc::kCollectorTypeDebugger);
     ScopedSuspendAll suspend("LSPlant Hook", false);
-    LOGV("Unhooking: target = %p, backup = %p", target, backup);
+    //LOGV("Unhooking: target = %p, backup = %p", target, backup);
     auto access_flags = target->GetAccessFlags();
     target->CopyFrom(backup);
     target->SetAccessFlags(access_flags);
-    LOGV("Done unhook: target(%p:0x%x) -> %p; backup(%p:0x%x) -> %p;", target,
-         target->GetAccessFlags(), target->GetEntryPoint(), backup, backup->GetAccessFlags(),
-         backup->GetEntryPoint());
+    //LOGV("Done unhook: target(%p:0x%x) -> %p; backup(%p:0x%x) -> %p;", target,
+         //target->GetAccessFlags(), target->GetEntryPoint(), backup, backup->GetAccessFlags(),
+         //backup->GetEntryPoint());
     return true;
 }
 
@@ -688,11 +688,11 @@ using ::lsplant::IsHooked;
 [[maybe_unused]] jobject Hook(JNIEnv *env, jobject target_method, jobject hooker_object,
                               jobject callback_method) {
     if (!target_method || !JNI_IsInstanceOf(env, target_method, executable)) {
-        LOGE("target method is not an executable");
+        //LOGE("target method is not an executable");
         return nullptr;
     }
     if (!callback_method || !JNI_IsInstanceOf(env, callback_method, executable)) {
-        LOGE("callback method is not an executable");
+        //LOGE("callback method is not an executable");
         return nullptr;
     }
 
@@ -708,7 +708,7 @@ using ::lsplant::IsHooked;
     bool is_static = target->IsStatic();
 
     if (IsHooked(target, true)) {
-        LOGW("Skip duplicate hook");
+        //LOGW("Skip duplicate hook");
         return nullptr;
     }
 
@@ -728,7 +728,7 @@ using ::lsplant::IsHooked;
             JNI_Cast<jstring>(JNI_CallObjectMethod(env, callback_class, class_get_name));
         JUTFString class_name(callback_class_name);
         if (!JNI_IsInstanceOf(env, hooker_object, callback_class)) {
-            LOGE("callback_method is not a method of hooker_object");
+            //LOGE("callback_method is not a method of hooker_object");
             return nullptr;
         }
         std::tie(built_class, hooker_field, hook_method, backup_method) = WrapScope(
@@ -739,7 +739,7 @@ using ::lsplant::IsHooked;
                      is_static, target->IsConstructor() ? "constructor" : target_method_name.get(),
                      class_name.get(), callback_method_name.get()));
         if (!built_class || !hooker_field || !hook_method || !backup_method) {
-            LOGE("Failed to generate hooker");
+            //LOGE("Failed to generate hooker");
             return nullptr;
         }
     }
@@ -779,7 +779,7 @@ using ::lsplant::IsHooked;
 
 [[maybe_unused]] bool UnHook(JNIEnv *env, jobject target_method) {
     if (!target_method || !JNI_IsInstanceOf(env, target_method, executable)) {
-        LOGE("target method is not an executable");
+        //LOGE("target method is not an executable");
         return false;
     }
     auto *target = ArtMethod::FromReflectedMethod(env, target_method);
@@ -789,7 +789,7 @@ using ::lsplant::IsHooked;
             std::tie(reflected_backup, backup) = it.second;
             return reflected_backup != nullptr;
         })) {
-        LOGE("Unable to unhook a method that is not hooked");
+        //LOGE("Unable to unhook a method that is not hooked");
         return false;
     }
     // FIXME: not atomic, but should be fine
@@ -815,7 +815,7 @@ using ::lsplant::IsHooked;
 
 [[maybe_unused]] bool IsHooked(JNIEnv *env, jobject method) {
     if (!method || !JNI_IsInstanceOf(env, method, executable)) {
-        LOGE("method is not an executable");
+        //LOGE("method is not an executable");
         return false;
     }
     auto *art_method = ArtMethod::FromReflectedMethod(env, method);
@@ -824,7 +824,7 @@ using ::lsplant::IsHooked;
 
 [[maybe_unused]] bool Deoptimize(JNIEnv *env, jobject method) {
     if (!method || !JNI_IsInstanceOf(env, method, executable)) {
-        LOGE("method is not an executable");
+        //LOGE("method is not an executable");
         return false;
     }
     auto *art_method = ArtMethod::FromReflectedMethod(env, method);
@@ -841,12 +841,12 @@ using ::lsplant::IsHooked;
 
 [[maybe_unused]] void *GetNativeFunction(JNIEnv *env, jobject method) {
     if (!method || !JNI_IsInstanceOf(env, method, executable)) {
-        LOGE("method is not an executable");
+        //LOGE("method is not an executable");
         return nullptr;
     }
     auto *art_method = ArtMethod::FromReflectedMethod(env, method);
     if (!art_method->IsNative()) {
-        LOGE("method is not native");
+        //LOGE("method is not native");
         return nullptr;
     }
     return art_method->GetData();
@@ -854,7 +854,7 @@ using ::lsplant::IsHooked;
 
 [[maybe_unused]] bool MakeClassInheritable(JNIEnv *env, jclass target) {
     if (!target) {
-        LOGE("target class is null");
+        //LOGE("target class is null");
         return false;
     }
     const auto constructors =

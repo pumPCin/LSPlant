@@ -9,8 +9,8 @@ class Instrumentation {
     inline static ArtMethod *MaybeUseBackupMethod(ArtMethod *art_method, const void *quick_code) {
         if (auto backup = IsHooked(art_method); backup && art_method->GetEntryPoint() != quick_code)
             [[unlikely]] {
-            LOGD("Propagate update method code %p for hooked method %p to its backup", quick_code,
-                 art_method);
+            //LOGD("Propagate update method code %p for hooked method %p to its backup", quick_code,
+                 //art_method);
             return backup;
         }
         return art_method;
@@ -21,8 +21,8 @@ class Instrumentation {
         void, UpdateMethodsCodeToInterpreterEntryPoint,
         (Instrumentation * thiz, ArtMethod *art_method), {
             if (IsDeoptimized(art_method)) {
-                LOGV("skip update entrypoint on deoptimized method %s",
-                     art_method->PrettyMethod(true).c_str());
+                //LOGV("skip update entrypoint on deoptimized method %s",
+                     //art_method->PrettyMethod(true).c_str());
                 return;
             }
             backup(thiz, MaybeUseBackupMethod(art_method, nullptr));
@@ -33,8 +33,8 @@ class Instrumentation {
         InitializeMethodsCode,
         (Instrumentation * thiz, ArtMethod *art_method, const void *quick_code), {
             if (IsDeoptimized(art_method)) {
-                LOGV("skip update entrypoint on deoptimized method %s",
-                     art_method->PrettyMethod(true).c_str());
+                //LOGV("skip update entrypoint on deoptimized method %s",
+                     //art_method->PrettyMethod(true).c_str());
                 return;
             }
             backup(thiz, MaybeUseBackupMethod(art_method, quick_code), quick_code);

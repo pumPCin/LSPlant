@@ -72,7 +72,7 @@ public:
         } else if (instance_ = reinterpret_cast<Runtime *>(*instance); !instance_) {
             return false;
         }
-        LOGD("runtime instance = %p", instance_);
+        //LOGD("runtime instance = %p", instance_);
         if (sdk_int >= __ANDROID_API_O__) {
             if (!RETRIEVE_MEM_FUNC_SYMBOL(SetJavaDebuggable,
                                           "_ZN3art7Runtime17SetJavaDebuggableEb") &&
@@ -94,13 +94,13 @@ public:
                 if (*reinterpret_cast<RuntimeDebugState *>(
                         reinterpret_cast<uintptr_t>(fake_runtime) + i) ==
                     RuntimeDebugState::kJavaDebuggable) {
-                    LOGD("found debug_state at offset %zu", i);
+                    //LOGD("found debug_state at offset %zu", i);
                     debug_state_offset = i;
                     break;
                 }
             }
             if (debug_state_offset == 0) {
-                LOGE("failed to find debug_state");
+                //LOGE("failed to find debug_state");
                 return false;
             }
         }

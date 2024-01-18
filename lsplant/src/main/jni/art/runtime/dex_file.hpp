@@ -106,7 +106,7 @@ public:
             if (!RETRIEVE_FUNC_SYMBOL(DexFile_setTrusted,
                                       "_ZN3artL18DexFile_setTrustedEP7_JNIEnvP7_jclassP8_jobject",
                                       true)) {
-                LOGW("DexFile.setTrusted not found, MakeDexFileTrusted will not work.");
+                //LOGW("DexFile.setTrusted not found, MakeDexFileTrusted will not work.");
             }
         }
         if (sdk_int >= __ANDROID_API_O__) [[likely]] {
@@ -130,7 +130,7 @@ public:
                           "traitsIcEENS3_9allocatorIcEEEEjPNS_6MemMapEPS9_",
                           "_ZN3art7DexFile10OpenMemoryEPKhmRKNSt3__112basic_stringIcNS3_11char_"
                           "traitsIcEENS3_9allocatorIcEEEEjPNS_6MemMapEPS9_"))) [[unlikely]] {
-            LOGE("Failed to find OpenMemory");
+            //LOGE("Failed to find OpenMemory");
             return false;
         }
         dex_file_class = JNI_NewGlobalRef(env, JNI_FindClass(env, "dalvik/system/DexFile"));

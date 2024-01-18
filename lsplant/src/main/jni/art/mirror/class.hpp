@@ -40,7 +40,7 @@ private:
             hooked_classes_.if_contains(class_def, [&out](const auto &it) {
                 for (auto method : it.second) {
                     if (method->IsStatic()) {
-                        LOGV("Backup hooked method %p because of initialization", method);
+                        //LOGV("Backup hooked method %p because of initialization", method);
                         out.emplace_back(method, method->GetEntryPoint());
                     }
                 }
@@ -50,7 +50,7 @@ private:
             deoptimized_classes_.if_contains(class_def, [&out](const auto &it) {
                 for (auto method : it.second) {
                     if (method->IsStatic()) {
-                        LOGV("Backup deoptimized method %p because of initialization", method);
+                        //LOGV("Backup deoptimized method %p because of initialization", method);
                         out.emplace_back(method, method->GetEntryPoint());
                     }
                 }
