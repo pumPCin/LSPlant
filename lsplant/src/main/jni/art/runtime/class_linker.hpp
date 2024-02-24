@@ -84,7 +84,7 @@ private:
             if (backup_method) {
                 // If deoptimized, the backup entrypoint should be already set to interpreter
                 if (!deoptimized && new_trampoline != old_trampoline) [[unlikely]] {
-                    LOGV("propagate entrypoint for orig %p backup %p", art_method, backup_method);
+                    //LOGV("propagate entrypoint for orig %p backup %p", art_method, backup_method);
                     backup_method->SetEntryPoint(new_trampoline);
                 }
             } else if (deoptimized) {

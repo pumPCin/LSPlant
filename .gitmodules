@@ -6,6 +6,3 @@
 	path = docs/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
 	branch = main
-[submodule "test/src/main/jni/external/lsparself"]
-	path = test/src/main/jni/external/lsparself
-	url = git@github.com:LSPosed/lsparself.git
