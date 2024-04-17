@@ -123,7 +123,7 @@ public class UnitTest {
     public void t06_proxyMethod() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         var proxyInterface = Class.forName("org.lsposed.lsplant.LSPTest$ForProxy");
         var proxy = Proxy.newProxyInstance(proxyInterface.getClassLoader(), new Class[]{proxyInterface}, (proxy1, method, args) -> {
-            if (method.getName().equals("abstractMethod")) {
+            if ("abstractMethod".equals(method.getName())) {
                 return (String) args[0] + (boolean) args[1] + (byte) args[2] + (short) args[3] + (int) args[4] + (long) args[5] + (float) args[6] + (double) args[7] + (Integer) args[8] + (Long) args[9];
             }
             return method.invoke(proxy1, args);
