@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.4.1)
 project(lsplant)
 
 find_program(CCACHE ccache)
@@ -13,7 +13,7 @@ if (LSPLANT_STANDALONE)
     link_libraries(cxx::cxx)
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
+add_definitions(-std=c++20)
 
 set(SOURCES lsplant.cc)
 
@@ -25,7 +25,6 @@ option(LSPLANT_BUILD_SHARED "If ON, lsplant will also build shared library" ON)
 if (LSPLANT_BUILD_SHARED)
     message(STATUS "Building lsplant as a shared library")
     add_library(${PROJECT_NAME} SHARED ${SOURCES})
-    set_target_properties(${PROJECT_NAME} PROPERTIES CXX_SCAN_FOR_MODULES ON)
     target_include_directories(${PROJECT_NAME} PUBLIC include)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_compile_options(${PROJECT_NAME} PRIVATE -flto)
