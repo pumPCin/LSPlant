@@ -1,33 +1,37 @@
-#include "lsplant.hpp"
-
 #include <android/api-level.h>
+#include <bits/sysconf.h>
 #include <sys/mman.h>
 #include <sys/system_properties.h>
 
 #include <array>
 #include <atomic>
-#include <bits/sysconf.h>
+#include <bit>
 
-#include "art/mirror/class.hpp"
-#include "art/runtime/art_method.hpp"
-#include "art/runtime/class_linker.hpp"
-#include "art/runtime/dex_file.hpp"
-#include "art/runtime/gc/scoped_gc_critical_section.hpp"
-#include "art/runtime/instrumentation.hpp"
-#include "art/runtime/jit/jit_code_cache.hpp"
-#include "art/runtime/jni/jni_id_manager.h"
-#include "art/runtime/runtime.hpp"
-#include "art/runtime/thread.hpp"
-#include "art/runtime/thread_list.hpp"
-#include "common.hpp"
-#include "dex_builder.h"
-#include "utils/jni_helper.hpp"
+#include "logging.hpp"
+#include "utils/hook_helper.hpp"
+
+import dex_builder;
+import lsplant;
+
+import common;
+import art_method;
+import clazz;
+import thread;
+import instrumentation;
+import runtime;
+import thread_list;
+import class_linker;
+import scope_gc_critical_section;
+import jit_code_cache;
+import jni_id_manager;
+import dex_file;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "ConstantConditionsOC"
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
+
 namespace lsplant {
 
 using art::ArtMethod;
@@ -41,6 +45,8 @@ using art::jit::JitCodeCache;
 using art::jni::JniIdManager;
 using art::mirror::Class;
 using art::thread_list::ScopedSuspendAll;
+
+using namespace std::string_view_literals;
 
 namespace {
 template <typename T, T... chars>
@@ -394,7 +400,7 @@ std::tuple<jclass, jfieldID, jmethodID, jmethodID> BuildDex(JNIEnv *env, jobject
                              .Encode();
 
     auto hook_builder{cbuilder.CreateMethod(
-        generated_method_name == "{target}" ? method_name.data() : generated_method_name,
+        generated_method_name == "{target}"sv ? method_name.data() : generated_method_name,
         Prototype{return_type, parameter_types})};
     // allocate tmp first because of wide
     auto tmp{hook_builder.AllocRegister()};
@@ -475,7 +481,7 @@ std::tuple<jclass, jfieldID, jmethodID, jmethodID> BuildDex(JNIEnv *env, jobject
         if (!dex) {
             //LOGE("Failed to open memory dex: %s", err_msg.data());
         } else {
-            java_dex_file = WrapScope(env, dex ? dex->ToJavaDexFile(env) : jobject{nullptr});
+            java_dex_file = ScopedLocalRef(env, dex ? dex->ToJavaDexFile(env) : nullptr);
         }
     }
 
