@@ -1,18 +1,11 @@
-module;
+#pragma once
 
-#include "logging.hpp"
-#include "utils/hook_helper.hpp"
-
-export module art_method;
-
-import common;
+#include "art/mirror/class.hpp"
+#include "common.hpp"
 
 namespace lsplant::art {
-namespace mirror {
-class Class;
-}
 
-export class ArtMethod {
+class ArtMethod {
     CREATE_FUNC_SYMBOL_ENTRY(std::string, PrettyMethod, ArtMethod *thiz, bool with_signature) {
         if (thiz == nullptr) [[unlikely]]
             return "null";
@@ -281,8 +274,7 @@ public:
                     //LOGE("Failed to find Executable.getName");
                     return false;
                 }
-                RETRIEVE_MEM_FUNC_SYMBOL(ThrowInvocationTimeError,
-                                         "_ZN3art9ArtMethod24ThrowInvocationTimeErrorEv");
+                RETRIEVE_MEM_FUNC_SYMBOL(ThrowInvocationTimeError, "_ZN3art9ArtMethod24ThrowInvocationTimeErrorEv");
                 auto abstract_method = FromReflectedMethod(
                     env, JNI_ToReflectedMethod(env, executable, executable_get_name, false));
                 uint32_t access_flags = abstract_method->GetAccessFlags();

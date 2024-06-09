@@ -1,17 +1,12 @@
-module;
+#pragma once
 
-#include "logging.hpp"
-#include "utils/hook_helper.hpp"
-
-export module jni_id_manager;
-
-import art_method;
-import common;
-import handle;
+#include "art/runtime/art_method.hpp"
+#include "art/runtime/reflective_handle.hpp"
+#include "common.hpp"
 
 namespace lsplant::art::jni {
 
-export class JniIdManager {
+class JniIdManager {
 private:
     CREATE_MEM_HOOK_STUB_ENTRY(
         "_ZN3art3jni12JniIdManager15EncodeGenericIdINS_9ArtMethodEEEmNS_16ReflectiveHandleIT_EE",

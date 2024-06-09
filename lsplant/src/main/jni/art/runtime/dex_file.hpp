@@ -1,18 +1,13 @@
-module;
+#pragma once
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "logging.hpp"
-#include "utils/hook_helper.hpp"
-
-export module dex_file;
-
-import common;
+#include "common.hpp"
 
 namespace lsplant::art {
-export class DexFile {
+class DexFile {
     struct Header {
         [[maybe_unused]] uint8_t magic_[8];
         uint32_t checksum_;  // See also location_checksum_

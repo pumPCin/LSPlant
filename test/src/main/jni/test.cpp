@@ -1,11 +1,8 @@
-#include <jni.h>
 #include <dobby.h>
+#include <lsplant.hpp>
 #include <sys/mman.h>
 #include "elf_util.h"
-#include <string_view>
 #include "logging.h"
-
-import lsplant;
 
 #define _uintval(p)               reinterpret_cast<uintptr_t>(p)
 #define _ptr(p)                   reinterpret_cast<void *>(p)
